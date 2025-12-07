@@ -1,6 +1,7 @@
 package com.example.laba6_sharedflowdemo
 
 import android.os.Bundle
+import android.util.Log.i
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -57,8 +58,9 @@ fun MainScreen(
     val messages = remember { mutableStateListOf<Int>() }
 
     LaunchedEffect(key1 = Unit) {
-        sharedFlow.collect { value ->
-            messages.add(value)
+        sharedFlow.collect {
+            println("Collecting $it")
+            messages.add(it)
         }
     }
 
