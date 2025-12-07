@@ -19,9 +19,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.compose.rememberLifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.laba6_sharedflowdemo.ui.theme.Laba6_SharedFlowDemoTheme
 import kotlinx.coroutines.flow.SharedFlow
+
+import androidx.lifecycle.repeatOnLifecycle
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,11 +61,13 @@ fun MainScreen(
     sharedFlow: SharedFlow<Int>
 ) {
     val messages = remember { mutableStateListOf<Int>() }
-
+    val lifecycleOwner = LocalLifecycleOwner.current
     LaunchedEffect(key1 = Unit) {
-        sharedFlow.collect {
-            println("Collecting $it")
-            messages.add(it)
+        lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            sharedFlow.collect {
+                    println("Collecting $it")
+                    messages.add(it)
+                }
         }
     }
 
